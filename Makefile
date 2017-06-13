@@ -1,9 +1,9 @@
 exec = bin/sems-c
-obj = obj/sems-c.o
-src = src/sems-c.c
+obj = obj/sems-c.o obj/args.o
+src = src/sems-c.c src/args.c
 
 CC = mpic++
-CFLAGS := -fopenmp -O3
+CFLAGS := -fopenmp -O3 -Wall
 
 all: sems-c
 
@@ -14,7 +14,7 @@ sems-c: $(src) $(obj) | bin
 	$(CC) $(CFLAGS) -o $(exec) $(obj)
 	chmod -R 751 bin/
 
-obj/%.o: src/%.cpp | obj
+obj/%.o: src/%.c | obj
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 obj:
