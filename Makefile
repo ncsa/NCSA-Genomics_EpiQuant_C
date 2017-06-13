@@ -3,7 +3,7 @@ obj = obj/sems-c.o obj/args.o
 src = src/sems-c.c src/args.c
 
 CC = mpic++
-CFLAGS := -fopenmp -O3 -Wall
+CFLAGS := -fopenmp -O3 -Wall -W
 
 all: sems-c
 

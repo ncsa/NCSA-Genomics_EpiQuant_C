@@ -5,6 +5,6 @@
 
 int main(int argc, char *argv[])
 {
-	getSettings(argc, argv);
+	getArgs(argc, argv);
 	return 0;
 }
