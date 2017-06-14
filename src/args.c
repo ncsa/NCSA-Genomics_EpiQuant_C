@@ -1,7 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <setjmp.h>
 #include "args.h"
+
+#define TRY do{ jmp_buf ex_buf__; if( !setjmp(ex_buf__) ){
+#define CATCH } else {
+#define ETRY } }while(0)
+#define THROW longjmp(ex_buf__, 1)
 
 void printHelp() {
 	printf("\n\
@@ -36,7 +42,7 @@ Options:\n\
                                 delimited by the given delimiter. Expects the\n\
                                 form:\n\
 \n\
-                                -d [c/s/t]\n\
+                                -d [c/s/t,c/s/t]\n\
 \n\
                                 where 'c' is comma, 's' is space, and 't' is\n\
                                 tab. Allows multiple delimiters. First is for\n\
@@ -44,6 +50,9 @@ Options:\n\
                                 delimited.\n\
 \n\
     -t    Transpose Data        Transpose data from phenotype and/or snp file.\n\
+\n\
+                                -t [p/s,p/s]\n\
+\n\
 \n");
 }
 
@@ -60,7 +69,27 @@ Options:\n\
 \n");
 }
 
-void getArgs(int argc, char *argv[]) {
+void getColumns() {
+
+}
+
+void getDelimiters() {
+
+}
+
+void getTranpose(char *arg, bool *pTrans, bool *sTrans) {
+	char * token = strtok(arg, ",");
+	if (*token == 'p') {
+		*pTrans = true;
+	}
+	while ((token = strtok(NULL, ",")) != NULL) {
+		if (*token == 's') {
+			*sTrans = true;
+		}
+	}
+}
+
+void getArgs(int argc, char *argv[], bool *pTrans, bool *sTrans) {
 	if (argc == 2) {
 		if (strcmp(argv[1], "-h") == 0) {
 					printHelp();
@@ -69,20 +98,23 @@ void getArgs(int argc, char *argv[]) {
 					printUsage();
 					exit(1);
 		}
-	} else if (argc == 1 || argc - 2 <= 1) {
+	} else if (argc == 1 || argc - 2 < 0) {
 		fprintf(stderr,"\
 sems-c: You must at least provide a phenotype file and snp file.\n\
         Try 'sems-c -h' or 'sems-c -u' for more information.\n");
 		exit(1);
 	} else {
 		for (int i = 1; i < argc - 2; ++i) {
+			printf("%s\n", argv[i]);
 			switch(argv[i][1]) {
 				case 'c':
 					
 				case 'd':
 					
 				case 't':
-					
+					++i;
+					getTranpose(argv[i], pTrans, sTrans);
+					break;
 				default:
 					fprintf(stderr, "\
 sems-c: An invalid option was given to sems-c.\n\

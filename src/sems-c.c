@@ -4,7 +4,12 @@
 #include "mpi.h"
 
 int main(int argc, char *argv[]) {
-	getArgs(argc, argv);
+	bool pTrans = false;
+	bool sTrans = false;
+	char pDelim, sDelim;
+
+	getArgs(argc, argv, &pTrans, &sTrans);
+	printf("%d:%d\n", pTrans, sTrans);
 
 	char * snpFile = argv[argc - 1];
 	char * phenoFile = argv[argc - 2];
