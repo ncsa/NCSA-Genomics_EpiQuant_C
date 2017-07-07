@@ -77,26 +77,26 @@ void getDelimiters() {
 
 }
 
-void getTranpose(char *arg, bool *pTrans, bool *sTrans) {
+void getTranpose(char *arg, int *pTrans, int *sTrans) {
 	char * token = strtok(arg, ",");
 	if (*token == 'p') {
-		*pTrans = true;
+		*pTrans = 1;
 	}
 	while ((token = strtok(NULL, ",")) != NULL) {
 		if (*token == 's') {
-			*sTrans = true;
+			*sTrans = 1;
 		}
 	}
 }
 
-void getArgs(int argc, char *argv[], bool *pTrans, bool *sTrans) {
+void getArgs(int argc, char *argv[], int *pTrans, int *sTrans) {
 	if (argc == 2) {
 		if (strcmp(argv[1], "-h") == 0) {
-					printHelp();
-					exit(1);
+			printHelp();
+			exit(1);
 		} else if (strcmp(argv[1], "-u") == 0) {
-					printUsage();
-					exit(1);
+			printUsage();
+			exit(1);
 		}
 	} else if (argc == 1 || argc - 2 < 0) {
 		fprintf(stderr,"\
