@@ -98,6 +98,7 @@ void getDelimiters(char *arg, char *pDelim, char *sDelim) {
 	*sDelim = arg[2];
 }
 
+// Prints transpose error text.
 void transError() {
 	fprintf(stderr, "\
 sems-c: The transpose option must be p or s.\n\
@@ -105,6 +106,11 @@ sems-c: The transpose option must be p or s.\n\
 	exit(1);
 }
 
+// Gets user given transpose options.
+// Params:
+// 		arg (char *) the tranpose options.
+// 		pTrans (int *) option to tranpose phenotype file.
+// 		strans (int *) option to tranpose snp file.
 void getTranpose(char *arg, int *pTrans, int *sTrans) {
 	char * token = strtok(arg, ",");
 	if (*token != 'p' && *token != 's') {
@@ -127,6 +133,14 @@ void getTranpose(char *arg, int *pTrans, int *sTrans) {
 	}
 }
 
+// Gets and sets user given options.
+// Params:
+// 		argc (int) number of user arguments.
+// 		argv (char *[]) user arguments.
+// 		pTrans (int *) option to tranpose phenotype file.
+// 		sTrans (int *) option to tranpose snp file.
+// 		pDelim (char *) phenotype file delimiter.
+// 		sDelim (char *) snp file delimiter.
 void getArgs(int argc, char *argv[], int *pTrans, int *sTrans, char *pDelim, char *sDelim) {
 	if (argc == 2) {
 		if (strcmp(argv[1], "-h") == 0) {
