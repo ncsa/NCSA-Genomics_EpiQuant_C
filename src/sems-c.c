@@ -4,8 +4,8 @@
 #include "mpi.h"
 
 int main(int argc, char *argv[]) {
-	bool pTrans = false;
-	bool sTrans = false;
+	int pTrans = 0;
+	int sTrans = 0;
 	char pDelim, sDelim;
 
 	getArgs(argc, argv, &pTrans, &sTrans);
