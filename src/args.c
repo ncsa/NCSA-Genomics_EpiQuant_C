@@ -81,10 +81,14 @@ void getTranpose(char *arg, int *pTrans, int *sTrans) {
 	char * token = strtok(arg, ",");
 	if (*token == 'p') {
 		*pTrans = 1;
+	} else if (*token == 's'){
+		*sTrans = 1;
 	}
 	while ((token = strtok(NULL, ",")) != NULL) {
 		if (*token == 's') {
 			*sTrans = 1;
+		} else if (*token == 'p') {
+			*pTrans = 1;
 		}
 	}
 }
@@ -104,7 +108,7 @@ sems-c: You must at least provide a phenotype file and snp file.\n\
         Try 'sems-c -h' or 'sems-c -u' for more information.\n");
 		exit(1);
 	} else {
-		for (int i = 1; i < argc - 2; ++i) {
+		for (int i = 1; i < argc - 1; ++i) {
 			printf("%s\n", argv[i]);
 			switch(argv[i][1]) {
 				case 'c':

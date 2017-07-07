@@ -9,7 +9,7 @@ int main(int argc, char *argv[]) {
 	char pDelim, sDelim;
 
 	getArgs(argc, argv, &pTrans, &sTrans);
-	printf("%d:%d\n", pTrans, sTrans);
+	// printf("%d:%d\n", pTrans, sTrans);
 
 	char * snpFile = argv[argc - 1];
 	char * phenoFile = argv[argc - 2];
