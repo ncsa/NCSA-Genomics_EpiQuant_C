@@ -73,18 +73,44 @@ void getColumns() {
 
 }
 
-void getDelimiters() {
+void delimError() {
+	fprintf(stderr, "\
+sems-c: The delimiter option must be c, s, or t.\n\
+        Try 'sems-c -h' or 'sems-c -u' for more information.\n");
+	exit(1);
+}
 
+void getDelimiters(char *arg, char *pDelim, char *sDelim) {
+	if (arg[0] != 'c' && arg[0] != 't' && arg[0] != 's') {
+		delimError();
+	} else if (arg[2] != 'c' && arg[2] != 't' && arg[2] != 's') {
+		delimError();
+	}
+	*pDelim = arg[0];
+	*sDelim = arg[2];
+}
+
+void transError() {
+	fprintf(stderr, "\
+sems-c: The transpose option must be p or s.\n\
+        Try 'sems-c -h' or 'sems-c -u' for more information.\n");
+	exit(1);
 }
 
 void getTranpose(char *arg, int *pTrans, int *sTrans) {
 	char * token = strtok(arg, ",");
+	if (*token != 'p' && *token != 's') {
+		transError();
+	}
 	if (*token == 'p') {
 		*pTrans = 1;
 	} else if (*token == 's'){
 		*sTrans = 1;
 	}
 	while ((token = strtok(NULL, ",")) != NULL) {
+		if (*token != 'p' && *token != 's') {
+			transError();
+		}
 		if (*token == 's') {
 			*sTrans = 1;
 		} else if (*token == 'p') {
@@ -93,7 +119,7 @@ void getTranpose(char *arg, int *pTrans, int *sTrans) {
 	}
 }
 
-void getArgs(int argc, char *argv[], int *pTrans, int *sTrans) {
+void getArgs(int argc, char *argv[], int *pTrans, int *sTrans, char *pDelim, char *sDelim) {
 	if (argc == 2) {
 		if (strcmp(argv[1], "-h") == 0) {
 			printHelp();
@@ -108,13 +134,17 @@ sems-c: You must at least provide a phenotype file and snp file.\n\
         Try 'sems-c -h' or 'sems-c -u' for more information.\n");
 		exit(1);
 	} else {
+		int delimSet = 0;
 		for (int i = 1; i < argc - 1; ++i) {
 			printf("%s\n", argv[i]);
 			switch(argv[i][1]) {
 				case 'c':
 					
 				case 'd':
-					
+					++i;
+					getDelimiters(argv[i], pDelim, sDelim);
+					delimSet = 1;
+					break;
 				case 't':
 					++i;
 					getTranpose(argv[i], pTrans, sTrans);
@@ -125,6 +155,10 @@ sems-c: An invalid option was given to sems-c.\n\
         Try 'sems-c -h' or 'sems-c -u' for more information.\n");
 					exit(1);
 			}
+		}
+		if (!delimSet) {
+			*pDelim = 'c';
+			*sDelim = 'c';
 		}
 	}
 }
