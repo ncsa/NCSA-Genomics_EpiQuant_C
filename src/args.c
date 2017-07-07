@@ -9,6 +9,7 @@
 #define ETRY } }while(0)
 #define THROW longjmp(ex_buf__, 1)
 
+// Prints help text.
 void printHelp() {
 	printf("\n\
 SEMS-C -- Step-Wise Epistatic Model Selection in C\n\
@@ -56,6 +57,7 @@ Options:\n\
 \n");
 }
 
+// Print usage text.
 void printUsage() {
 	printf("\n\
 Usage: sems-c [OPTION...] [PHENOTYPE_FILE] [SNP_FILE]\n\
@@ -73,6 +75,7 @@ void getColumns() {
 
 }
 
+// Prints delimiter error text.
 void delimError() {
 	fprintf(stderr, "\
 sems-c: The delimiter option must be c, s, or t.\n\
@@ -80,6 +83,11 @@ sems-c: The delimiter option must be c, s, or t.\n\
 	exit(1);
 }
 
+// Gets user given delimiters.
+// Params:
+// 		arg (char *) the delimiter argument.
+// 		pDelim (char *) holds phenotype delimiter.
+// 		sDelim (char *) holds the snp delimiter.
 void getDelimiters(char *arg, char *pDelim, char *sDelim) {
 	if (arg[0] != 'c' && arg[0] != 't' && arg[0] != 's') {
 		delimError();
