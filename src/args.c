@@ -131,7 +131,7 @@ void getColumns(char *arg, int64_t ***pCol, int64_t ***sCol) {
 		
 		// Assign columns to column arrays.
 		if (arg[i] == ':' || arg[i] == ',' || argSize - 1 == i) {
-			printf("parial = %lld, p = %lld, s = %lld\n", partial, p, s);
+			// printf("parial = %lld, p = %lld, s = %lld\n", partial, p, s);
 			if (p == 1) {
 				(**pCol)[pIdx] = partial;
 				++pIdx;
@@ -219,14 +219,14 @@ void getArgs(int64_t argc, char *argv[], int64_t *pTrans, int64_t *sTrans, char 
 			printUsage();
 			exit(1);
 		}
-	} else if (argc == 1 || argc - 2 < 0) {
+	} else if (argc == 1 || argc - 2 <= 0) {
 		fprintf(stderr,"\
 sems-c: You must at least provide a phenotype file and snp file.\n\
         Try 'sems-c -h' or 'sems-c -u' for more information.\n");
 		exit(1);
 	} else {
 		int64_t delimSet = 0;
-		for (int64_t i = 1; i < argc - 1; ++i) {
+		for (int64_t i = 1; i < argc - 2; ++i) {
 			printf("%s\n", argv[i]);
 			switch(argv[i][1]) {
 				case 'c':
