@@ -2,8 +2,10 @@ exec = bin/sems-c
 obj = obj/sems-c.o obj/args.o
 src = src/sems-c.c src/args.c
 
-CC = mpic++
-CFLAGS := -fopenmp -O3 -Wall -W
+// CC = mpic++
+CC = gcc
+// CFLAGS := -fopenmp -O3 -Wall -W
+CFLAGS := -O3 -Wall -W
 
 all: sems-c
 
