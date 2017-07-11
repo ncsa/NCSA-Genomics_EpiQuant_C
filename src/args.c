@@ -73,12 +73,18 @@ Options:\n\
 }
 
 // Gets user given columsn to ignore.
+// Params:
+// 		arg (char *) user given argument to parse.
+// 		pCol (int64_t ***) phenotype columns to ignore.
+// 		sCol (int64_t ***) snp columns to ignore.
 void getColumns(char *arg, int64_t ***pCol, int64_t ***sCol) {
 	int64_t argSize = 0;
 	int64_t p = 0;
 	int64_t s = 0;
 	int64_t pSize = 0;
 	int64_t sSize = 0;
+
+	// Get number of phenotype and snp column arguments.
 	while (arg[argSize] != '\0') {
 		if (arg[argSize] == 'p') {
 			p = 1;
@@ -97,9 +103,10 @@ void getColumns(char *arg, int64_t ***pCol, int64_t ***sCol) {
 		}
 		++argSize;
 	}
-	printf("argSize = %lld\n", argSize);
-	printf("pSize = %lld\n", pSize);
-	printf("sSize = %lld\n", sSize);
+
+	// printf("argSize = %lld\n", argSize);
+	// printf("pSize = %lld\n", pSize);
+	// printf("sSize = %lld\n", sSize);
 	**pCol = (int64_t *) malloc(sizeof(int64_t) * pSize);
 	**sCol = (int64_t *) malloc(sizeof(int64_t) * sSize);
 	p = 0;
@@ -107,6 +114,8 @@ void getColumns(char *arg, int64_t ***pCol, int64_t ***sCol) {
 	int64_t pIdx = 0;
 	int64_t sIdx = 0;
 	int64_t partial = 0;
+
+	// Build and store phenotype and snp columns.
 	for (int64_t i = 0; i < argSize; i++) {
 		// Build partial columns.
 		if (arg[i] == 'p') {
