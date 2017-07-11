@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <setjmp.h>
@@ -72,8 +73,66 @@ Options:\n\
 }
 
 // Gets user given columsn to ignore.
-void getColumns() {
-
+void getColumns(char *arg, int64_t ***pCol, int64_t ***sCol) {
+	int64_t argSize = 0;
+	int64_t p = 0;
+	int64_t s = 0;
+	int64_t pSize = 0;
+	int64_t sSize = 0;
+	while (arg[argSize] != '\0') {
+		if (arg[argSize] == 'p') {
+			p = 1;
+			s = 0;
+			pSize = 1;
+		} else if (arg[argSize] == 's') {
+			p = 0;
+			s = 1;
+			sSize = 1;
+		} else if (arg[argSize] == ':') {
+			if (p == 1) {
+				++pSize;
+			} else {
+				++sSize;
+			}
+		}
+		++argSize;
+	}
+	printf("argSize = %lld\n", argSize);
+	printf("pSize = %lld\n", pSize);
+	printf("sSize = %lld\n", sSize);
+	**pCol = (int64_t *) malloc(sizeof(int64_t) * pSize);
+	**sCol = (int64_t *) malloc(sizeof(int64_t) * sSize);
+	p = 0;
+	s = 0;
+	int64_t pIdx = 0;
+	int64_t sIdx = 0;
+	int64_t partial = 0;
+	for (int64_t i = 0; i < argSize; i++) {
+		// Build partial columns.
+		if (arg[i] == 'p') {
+			p = 1;
+			s = 0;
+		} else if (arg[i] == 's') {
+			p = 0;
+			s = 1;
+		} else if (arg[i] != '=' && arg[i] != ':' && arg[i] != ',') {
+			partial *= 10;
+			partial += arg[i] - '0';
+		}
+		
+		// Assign columns to column arrays.
+		if (arg[i] == ':' || arg[i] == ',' || argSize - 1 == i) {
+			printf("parial = %lld, p = %lld, s = %lld\n", partial, p, s);
+			if (p == 1) {
+				(**pCol)[pIdx] = partial;
+				++pIdx;
+			} else {
+				(**sCol)[sIdx] = partial;
+				++sIdx;
+			}
+			partial = 0;
+		}
+	}
 }
 
 // Prints delimiter error text.
@@ -110,9 +169,9 @@ sems-c: The transpose option must be p or s.\n\
 // Gets user given transpose options.
 // Params:
 // 		arg (char *) the tranpose options.
-// 		pTrans (int *) option to tranpose phenotype file.
-// 		strans (int *) option to tranpose snp file.
-void getTranpose(char *arg, int *pTrans, int *sTrans) {
+// 		pTrans (int64_t *) option to tranpose phenotype file.
+// 		strans (int64_t *) option to tranpose snp file.
+void getTranpose(char *arg, int64_t *pTrans, int64_t *sTrans) {
 	char * token = strtok(arg, ",");
 	if (*token != 'p' && *token != 's') {
 		transError();
@@ -136,13 +195,13 @@ void getTranpose(char *arg, int *pTrans, int *sTrans) {
 
 // Gets and sets user given options.
 // Params:
-// 		argc (int) number of user arguments.
+// 		argc (int64_t) number of user arguments.
 // 		argv (char *[]) user arguments.
-// 		pTrans (int *) option to tranpose phenotype file.
-// 		sTrans (int *) option to tranpose snp file.
+// 		pTrans (int64_t *) option to tranpose phenotype file.
+// 		sTrans (int64_t *) option to tranpose snp file.
 // 		pDelim (char *) phenotype file delimiter.
 // 		sDelim (char *) snp file delimiter.
-void getArgs(int argc, char *argv[], int *pTrans, int *sTrans, char *pDelim, char *sDelim) {
+void getArgs(int64_t argc, char *argv[], int64_t *pTrans, int64_t *sTrans, char *pDelim, char *sDelim, int64_t **pCol, int64_t **sCol) {
 	if (argc == 2) {
 		if (strcmp(argv[1], "-h") == 0) {
 			printHelp();
@@ -157,12 +216,13 @@ sems-c: You must at least provide a phenotype file and snp file.\n\
         Try 'sems-c -h' or 'sems-c -u' for more information.\n");
 		exit(1);
 	} else {
-		int delimSet = 0;
-		for (int i = 1; i < argc - 1; ++i) {
+		int64_t delimSet = 0;
+		for (int64_t i = 1; i < argc - 1; ++i) {
 			printf("%s\n", argv[i]);
 			switch(argv[i][1]) {
 				case 'c':
-					// getColumns(argv[i], pCol, sCol);
+					++i;
+					getColumns(argv[i], &pCol, &sCol);
 					break;
 				case 'd':
 					++i;
