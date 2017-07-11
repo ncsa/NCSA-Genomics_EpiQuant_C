@@ -23,8 +23,8 @@ int main(int argc, char *argv[]) {
 	char *snpFile = argv[argc - 1];
 	char *phenoFile = argv[argc - 2];
 
-	getPhenotype();
-	getSNP();
+	getPhenotype(pTrans, pDelim, pCol, phenoFile);
+	getSNP(sTrans, sDelim, sCol, snpFile);
 
 	// printf("%lld:%lld\n", pTrans, sTrans);
 	// printf("%c:%c\n", pDelim, sDelim);
