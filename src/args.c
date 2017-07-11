@@ -63,7 +63,7 @@ void printUsage() {
 Usage: sems-c [OPTION...] [PHENOTYPE_FILE] [SNP_FILE]\n\
 \n\
 Options:\n\
-    [-c <pheno=...,snp=...>]    # Delete columns.\n\
+    [-c <p=...,s=...>]          # Delete columns.\n\
     [-d <delimiter,delimiter>]  # File delimiters.\n\
     [-h]                        # Print help text.\n\
     [-t <file,file>]            # Tranpose file data.\n\
@@ -71,6 +71,7 @@ Options:\n\
 \n");
 }
 
+// Gets user given columsn to ignore.
 void getColumns() {
 
 }
@@ -161,7 +162,8 @@ sems-c: You must at least provide a phenotype file and snp file.\n\
 			printf("%s\n", argv[i]);
 			switch(argv[i][1]) {
 				case 'c':
-					
+					// getColumns(argv[i], pCol, sCol);
+					break;
 				case 'd':
 					++i;
 					getDelimiters(argv[i], pDelim, sDelim);
