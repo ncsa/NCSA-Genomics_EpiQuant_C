@@ -5,6 +5,10 @@
 // #include "omp.h"
 // #include "mpi.h"
 
+// Gets the user given arguments.
+// Params:
+// 		argc (int) number of arguments passed to sems-c.
+// 		argv (char *[]) arguments passed to sems-c.
 int main(int argc, char *argv[]) {
 	int64_t pTrans = 0;
 	int64_t sTrans = 0;
