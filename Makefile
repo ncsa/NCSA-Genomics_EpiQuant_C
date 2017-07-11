@@ -1,11 +1,11 @@
 exec = bin/sems-c
-obj = obj/sems-c.o obj/args.o
-src = src/sems-c.c src/args.c
+obj = obj/sems-c.o obj/args.o obj/parser.o
+src = src/sems-c.c src/args.c src/parser.c
 
 // CC = mpic++
 CC = gcc
 // CFLAGS := -fopenmp -O3 -Wall -W
-CFLAGS := -O3 -Wall -W
+CFLAGS := -O3
 
 all: sems-c
 
