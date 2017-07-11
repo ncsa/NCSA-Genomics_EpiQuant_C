@@ -1,0 +1,7 @@
+void getPhenotype() {
+
+}
+
+void getSNP() {
+
+}
