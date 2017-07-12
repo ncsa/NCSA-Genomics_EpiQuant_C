@@ -5,7 +5,7 @@ src = src/sems-c.c src/args.c src/parser.c
 // CC = mpic++
 CC = gcc
 // CFLAGS := -fopenmp -O3 -Wall -W
-CFLAGS := -O3
+CFLAGS :=
 
 all: sems-c
 
