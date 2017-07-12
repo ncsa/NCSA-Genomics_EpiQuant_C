@@ -4,7 +4,6 @@
 
 #include "args.h"
 #include "parser.h"
-
 // #include "omp.h"
 // #include "mpi.h"
 
