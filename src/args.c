@@ -5,10 +5,67 @@
 #include <setjmp.h>
 #include "args.h"
 
-// #define TRY do{ jmp_buf ex_buf__; if( !setjmp(ex_buf__) ){
-// #define CATCH } else {
-// #define ETRY } }while(0)
-// #define THROW longjmp(ex_buf__, 1)
+void printHelp();
+void printUsage();
+void getColumns(char *arg, int64_t ***pCol, int64_t ***sCol);
+void delimError();
+void getDelimiters(char *arg, char *pDelim, char *sDelim);
+void transError();
+void getTranpose(char *arg, int64_t *pTrans, int64_t *sTrans);
+
+// Gets and sets user given options.
+// Params:
+// 		argc (int64_t) number of user arguments.
+// 		argv (char *[]) user arguments.
+// 		pTrans (int64_t *) option to tranpose phenotype file.
+// 		sTrans (int64_t *) option to tranpose snp file.
+// 		pDelim (char *) phenotype file delimiter.
+// 		sDelim (char *) snp file delimiter.
+void getArgs(int64_t argc, char *argv[], int64_t *pTrans, int64_t *sTrans, char *pDelim, char *sDelim, int64_t **pCol, int64_t **sCol) {
+	if (argc == 2) {
+		if (strcmp(argv[1], "-h") == 0) {
+			printHelp();
+			exit(1);
+		} else if (strcmp(argv[1], "-u") == 0) {
+			printUsage();
+			exit(1);
+		}
+	} else if (argc == 1 || argc - 2 <= 0) {
+		fprintf(stderr,"\
+sems-c: You must at least provide a phenotype file and snp file.\n\
+        Try 'sems-c -h' or 'sems-c -u' for more information.\n");
+		exit(1);
+	} else {
+		int64_t delimSet = 0;
+		for (int64_t i = 1; i < argc - 2; ++i) {
+			printf("%s\n", argv[i]);
+			switch(argv[i][1]) {
+				case 'c':
+					++i;
+					getColumns(argv[i], &pCol, &sCol);
+					break;
+				case 'd':
+					++i;
+					getDelimiters(argv[i], pDelim, sDelim);
+					delimSet = 1;
+					break;
+				case 't':
+					++i;
+					getTranpose(argv[i], pTrans, sTrans);
+					break;
+				default:
+					fprintf(stderr, "\
+sems-c: An invalid option was given to sems-c.\n\
+        Try 'sems-c -h' or 'sems-c -u' for more information.\n");
+					exit(1);
+			}
+		}
+		if (!delimSet) {
+			*pDelim = 'c';
+			*sDelim = 'c';
+		}
+	}
+}
 
 // Prints help text.
 void printHelp() {
@@ -198,60 +255,6 @@ void getTranpose(char *arg, int64_t *pTrans, int64_t *sTrans) {
 			*sTrans = 1;
 		} else if (*token == 'p') {
 			*pTrans = 1;
-		}
-	}
-}
-
-// Gets and sets user given options.
-// Params:
-// 		argc (int64_t) number of user arguments.
-// 		argv (char *[]) user arguments.
-// 		pTrans (int64_t *) option to tranpose phenotype file.
-// 		sTrans (int64_t *) option to tranpose snp file.
-// 		pDelim (char *) phenotype file delimiter.
-// 		sDelim (char *) snp file delimiter.
-void getArgs(int64_t argc, char *argv[], int64_t *pTrans, int64_t *sTrans, char *pDelim, char *sDelim, int64_t **pCol, int64_t **sCol) {
-	if (argc == 2) {
-		if (strcmp(argv[1], "-h") == 0) {
-			printHelp();
-			exit(1);
-		} else if (strcmp(argv[1], "-u") == 0) {
-			printUsage();
-			exit(1);
-		}
-	} else if (argc == 1 || argc - 2 <= 0) {
-		fprintf(stderr,"\
-sems-c: You must at least provide a phenotype file and snp file.\n\
-        Try 'sems-c -h' or 'sems-c -u' for more information.\n");
-		exit(1);
-	} else {
-		int64_t delimSet = 0;
-		for (int64_t i = 1; i < argc - 2; ++i) {
-			printf("%s\n", argv[i]);
-			switch(argv[i][1]) {
-				case 'c':
-					++i;
-					getColumns(argv[i], &pCol, &sCol);
-					break;
-				case 'd':
-					++i;
-					getDelimiters(argv[i], pDelim, sDelim);
-					delimSet = 1;
-					break;
-				case 't':
-					++i;
-					getTranpose(argv[i], pTrans, sTrans);
-					break;
-				default:
-					fprintf(stderr, "\
-sems-c: An invalid option was given to sems-c.\n\
-        Try 'sems-c -h' or 'sems-c -u' for more information.\n");
-					exit(1);
-			}
-		}
-		if (!delimSet) {
-			*pDelim = 'c';
-			*sDelim = 'c';
 		}
 	}
 }
