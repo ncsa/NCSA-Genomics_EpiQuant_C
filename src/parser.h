@@ -7,7 +7,10 @@
 //      pDelim (int64_t) phenotype data delimiter.
 //      pCol (int64_t *) phenotype data columns to ignore.
 //      phenoFile (char *) phenotype file name.
-void getPhenotype(int64_t pTrans, char pDelim, int64_t *pCol, char *phenoFile);
+void getPhenotype(int64_t pTrans, 
+                  char pDelim, 
+                  int64_t *pCol, 
+                  char *phenoFile);
 
 // Gets snp data from snp file.
 // Params:
@@ -15,6 +18,9 @@ void getPhenotype(int64_t pTrans, char pDelim, int64_t *pCol, char *phenoFile);
 //      sDelim (int64_t) snp data delimiter.
 //      sCol (int64_t *) snp data columns to ignore.
 //      snpFile (char *) snp file name.
-void getSNP(int64_t sTrans, char sDelim, int64_t *sCol, char *snpFile);
+void getSNP(int64_t sTrans, 
+            char sDelim, 
+            int64_t *sCol, 
+            char *snpFile);
 
 #endif
