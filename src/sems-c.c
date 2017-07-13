@@ -16,9 +16,9 @@ int main(int argc, char *argv[]) {
 	int64_t pTrans = 0;
 	int64_t sTrans = 0;
 	int64_t *pCol = (int64_t *) malloc(sizeof(int64_t));
-	pCol[0] = -1;
+	pCol[0] = 0;
 	int64_t *sCol = (int64_t *) malloc(sizeof(int64_t));
-	sCol[0] = -1;
+	sCol[0] = 0;
 	double alpha1 = 0.05;
 	double alpha2 = 0.05;
 	char *outFile = "sems-c.o";
