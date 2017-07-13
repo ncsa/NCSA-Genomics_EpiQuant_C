@@ -19,7 +19,8 @@ int main(int argc, char *argv[]) {
 	pCol[0] = -1;
 	int64_t *sCol = (int64_t *) malloc(sizeof(int64_t));
 	sCol[0] = -1;
-	double alpha = 0.05;
+	double alpha1 = 0.05;
+	double alpha2 = 0.05;
 	char *outFile = "sems-c.o";
 	char pDelim = 't';
 	char sDelim = 't';
@@ -27,7 +28,8 @@ int main(int argc, char *argv[]) {
 	char *phenoFile = argv[argc - 2];
 
 	// Get user passed arguments
-	getArgs(argc, argv, &pTrans, &sTrans, &pDelim, &sDelim, &pCol, &sCol, &alpha, &outFile);
+	getArgs(argc, argv, &pTrans, &sTrans, &pDelim, &sDelim, &pCol, &sCol, &alpha1, &alpha2, 
+	        &outFile);
 
 	// Gather data from phenotype and snp files.
 	struct Data *phenoData = getPhenotype(pTrans, pDelim, pCol, phenoFile);
@@ -35,9 +37,10 @@ int main(int argc, char *argv[]) {
 
 	// printData(phenoData);
 	// printData(snpData);
-	printUValues(pTrans, sTrans, pDelim, sDelim, pCol, sCol, phenoFile, snpFile, alpha, 
+	printUValues(pTrans, sTrans, pDelim, sDelim, pCol, sCol, phenoFile, snpFile, alpha1, alpha2, 
 	             outFile);
 
+	// Clean up allocated memory.
 	clean(phenoData);
 	clean(snpData);
 	free(pCol);
