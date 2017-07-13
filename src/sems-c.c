@@ -4,6 +4,7 @@
 
 #include "args.h"
 #include "parser.h"
+#include "clean.h"
 // #include "omp.h"
 // #include "mpi.h"
 
@@ -17,19 +18,20 @@ int main(int argc, char *argv[]) {
 	char pDelim, sDelim;
 	int64_t *pCol;
 	int64_t *sCol;
-
-	getArgs(argc, argv, &pTrans, &sTrans, &pDelim, &sDelim, &pCol, &sCol);
 	char *snpFile = argv[argc - 1];
 	char *phenoFile = argv[argc - 2];
 
-	getPhenotype(pTrans, pDelim, pCol, phenoFile);
-	getSNP(sTrans, sDelim, sCol, snpFile);
+	getArgs(argc, argv, &pTrans, &sTrans, &pDelim, &sDelim, &pCol, &sCol);
 
-	// printf("%lld:%lld\n", pTrans, sTrans);
-	// printf("%c:%c\n", pDelim, sDelim);
-	// printf("%lld:%lld\n", pCol[0], sCol[0]);
+	getPhenotype(pTrans, pDelim, pCol, phenoFile);
+	struct Data *snpData = getSNP(sTrans, sDelim, sCol, snpFile);
+
+	printf("%lld:%lld\n", pTrans, sTrans);
+	printf("%c:%c\n", pDelim, sDelim);
+	printf("%lld:%lld\n", pCol[0], sCol[0]);
 	printf("%s:%s\n", phenoFile, snpFile);
 
+	clean(snpData);
 	free(pCol);
 	free(sCol);
 	return 0;
