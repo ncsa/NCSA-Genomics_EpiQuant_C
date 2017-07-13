@@ -18,6 +18,12 @@ void getArgs(int64_t argc,
             char *pDelim, 
             char *sDelim, 
             int64_t **pCol, 
-            int64_t **sCol);
+            int64_t **sCol, 
+            double *alpha,
+            char **outFile);
+
+void printUValues(int64_t pTrans, int64_t sTrans, char pDelim, char sDelim, int64_t *pCol, 
+                  int64_t *sCol, char *phenoFile, char *snpFile, double alpha,
+                  char *outFile);
 
 #endif
