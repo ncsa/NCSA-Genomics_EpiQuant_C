@@ -32,4 +32,6 @@ struct Data * getSNP(int64_t sTrans,
             int64_t *sCol, 
             char *snpFile);
 
+void printData(struct Data *data);
+
 #endif
