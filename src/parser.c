@@ -12,7 +12,7 @@ struct Data {
     double **dataPoints;
 };
 
-void printSnpData(struct Data *snpData, int64_t rows, int64_t columns);
+void printData(struct Data *data, int64_t rows, int64_t columns);
 void printFiles(char *name, int64_t rows, int64_t columns, char buff[]);
 
 // Gets phenotype data from phenotype file.
@@ -122,24 +122,24 @@ struct Data * getSNP(int64_t sTrans, char sDelim, int64_t *sCol, char *snpFile) 
     snpData->headers = headers;
     snpData->labels = labels;
     snpData->dataPoints = dataPoints;
-    // printSnpData(snpData, rows, columns);
+    // printData(snpData, rows, columns);
     return snpData;
 }
 
-void printSnpData(struct Data *snpData, int64_t rows, int64_t columns) {
-    printf("snpData->name = %s\n", snpData->name);
-    printf("snpData->rows = %lld\n", *(snpData->rows));
-    printf("snpData->columns = %lld\n", *(snpData->columns));
+void printData(struct Data *data, int64_t rows, int64_t columns) {
+    printf("data->name = %s\n", data->name);
+    printf("data->rows = %lld\n", *(data->rows));
+    printf("data->columns = %lld\n", *(data->columns));
     // TODO: Find segmentation fault: 11
     for (int i = 0; i < columns - 1; ++i) {
-        printf("header[%d] = %s\n", i, snpData->headers[i]);
+        printf("header[%d] = %s\n", i, data->headers[i]);
     }
     for (int i = 0; i < rows - 1; ++i) {
-        printf("labels[%d] = %s\n", i, snpData->labels[i]);
+        printf("labels[%d] = %s\n", i, data->labels[i]);
     }
     for (int i = 0; i < rows - 1; ++i) {
         for (int j = 0; j < columns - 1; ++j) {
-            printf("dataPoints[%d][%d] = %f\n", i, j, snpData->dataPoints[i][j]);
+            printf("dataPoints[%d][%d] = %f\n", i, j, data->dataPoints[i][j]);
         }
     }
 }
