@@ -36,13 +36,15 @@ sems-c: You must at least provide a phenotype file and snp file.\n\
         Try 'sems-c -h' or 'sems-c -u' for more information.\n");
 		exit(1);
 	} else {
-		int64_t delimSet = 0;
+		int delimSet = 0;
+		int colSet = 0;
 		for (int64_t i = 1; i < argc - 2; ++i) {
-			printf("%s\n", argv[i]);
+			// printf("%s\n", argv[i]);
 			switch(argv[i][1]) {
 				case 'c':
 					++i;
 					getColumns(argv[i], &pCol, &sCol);
+					colSet = 1;
 					break;
 				case 'd':
 					++i;
@@ -63,6 +65,12 @@ sems-c: An invalid option was given to sems-c.\n\
 		if (!delimSet) {
 			*pDelim = 'c';
 			*sDelim = 'c';
+		}
+		if (!colSet) {
+			*pCol = (int64_t *) malloc(sizeof(int64_t));
+			**pCol = -1;
+			*sCol = (int64_t *) malloc(sizeof(int64_t));
+			**sCol = -1;
 		}
 	}
 }
@@ -164,8 +172,19 @@ void getColumns(char *arg, int64_t ***pCol, int64_t ***sCol) {
 	// printf("argSize = %lld\n", argSize);
 	// printf("pSize = %lld\n", pSize);
 	// printf("sSize = %lld\n", sSize);
-	**pCol = (int64_t *) malloc(sizeof(int64_t) * pSize);
-	**sCol = (int64_t *) malloc(sizeof(int64_t) * sSize);
+	if (pSize) {
+		**pCol = (int64_t *) malloc(sizeof(int64_t) * pSize);
+	} else {
+		**pCol = (int64_t *) malloc(sizeof(int64_t));
+		***pCol = -1;
+	}
+	if (sSize) {
+		**sCol = (int64_t *) malloc(sizeof(int64_t) * sSize);
+	} else {
+		**sCol = (int64_t *) malloc(sizeof(int64_t));
+		***sCol = -1;
+	}
+	
 	p = 0;
 	s = 0;
 	int64_t pIdx = 0;
