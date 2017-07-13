@@ -32,11 +32,11 @@ int main(int argc, char *argv[]) {
 	        &outFile);
 
 	// Gather data from phenotype and snp files.
-	struct Data *phenoData = getPhenotype(pTrans, pDelim, pCol, phenoFile);
-	struct Data *snpData = getSNP(sTrans, sDelim, sCol, snpFile);
+	struct Data *phenoData = getData(pTrans, pDelim, pCol, phenoFile);
+	struct Data *snpData = getData(sTrans, sDelim, sCol, snpFile);
 
 	// printData(phenoData);
-	// printData(snpData);
+	printData(snpData);
 	printUValues(pTrans, sTrans, pDelim, sDelim, pCol, sCol, phenoFile, snpFile, alpha1, alpha2, 
 	             outFile);
 
