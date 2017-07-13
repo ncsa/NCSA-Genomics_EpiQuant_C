@@ -16,7 +16,7 @@ struct Data {
 //      pDelim (int64_t) phenotype data delimiter.
 //      pCol (int64_t *) phenotype data columns to ignore.
 //      phenoFile (char *) phenotype file name.
-void getPhenotype(int64_t pTrans, 
+struct Data * getPhenotype(int64_t pTrans, 
                   char pDelim, 
                   int64_t *pCol, 
                   char *phenoFile);
