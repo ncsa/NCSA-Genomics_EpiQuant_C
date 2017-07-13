@@ -114,23 +114,15 @@ void getColumns(char *arg, int64_t ***pCol, int64_t ***sCol) {
 	// printf("argSize = %lld\n", argSize);
 	// printf("pSize = %lld\n", pSize);
 	// printf("sSize = %lld\n", sSize);
-	if (pSize) {
-		**pCol = (int64_t *) malloc(sizeof(int64_t) * pSize);
-	} else {
-		**pCol = (int64_t *) malloc(sizeof(int64_t));
-		***pCol = -1;
-	}
-	if (sSize) {
-		**sCol = (int64_t *) malloc(sizeof(int64_t) * sSize);
-	} else {
-		**sCol = (int64_t *) malloc(sizeof(int64_t));
-		***sCol = -1;
-	}
+	**pCol = (int64_t *) malloc(sizeof(int64_t) * (pSize + 1));
+	(**pCol)[0] = pSize;
+	**sCol = (int64_t *) malloc(sizeof(int64_t) * (sSize + 1));
+	(**sCol)[0] = sSize;
 	
 	p = 0;
 	s = 0;
-	int64_t pIdx = 0;
-	int64_t sIdx = 0;
+	int64_t pIdx = 1;
+	int64_t sIdx = 1;
 	int64_t partial = 0;
 
 	// Build and store phenotype and snp columns.
@@ -151,10 +143,10 @@ void getColumns(char *arg, int64_t ***pCol, int64_t ***sCol) {
 		if (arg[i] == ':' || arg[i] == ',' || argSize - 1 == i) {
 			// printf("parial = %lld, p = %lld, s = %lld\n", partial, p, s);
 			if (p == 1) {
-				(**pCol)[pIdx] = partial;
+				(**pCol)[pIdx] = partial - 1;
 				++pIdx;
 			} else {
-				(**sCol)[sIdx] = partial;
+				(**sCol)[sIdx] = partial - 1;
 				++sIdx;
 			}
 			partial = 0;
