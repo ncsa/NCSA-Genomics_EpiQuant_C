@@ -3,10 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <setjmp.h>
-#include "args.h"
+#include "info.h"
 
-void printHelp();
-void printUsage();
 void getColumns(char *arg, int64_t ***pCol, int64_t ***sCol);
 void delimError();
 void getDelimiters(char *arg, char *pDelim, char *sDelim);
@@ -21,8 +19,13 @@ void getTranpose(char *arg, int64_t *pTrans, int64_t *sTrans);
 // 		sTrans (int64_t *) option to tranpose snp file.
 // 		pDelim (char *) phenotype file delimiter.
 // 		sDelim (char *) snp file delimiter.
+// 		pCol (int64_t **) phenotype columns to ignore.
+// 		sCol (int64_t **) snp columns to ignore.
+// 		alpha (double *) threshold value.
+// 		outFile (char **) output results file name.
 void getArgs(int64_t argc, char *argv[], int64_t *pTrans, int64_t *sTrans, char *pDelim, 
-             char *sDelim, int64_t **pCol, int64_t **sCol, double *alpha, char **outFile) {
+             char *sDelim, int64_t **pCol, int64_t **sCol, double *alpha1, double *alpha2, 
+			 char **outFile) {
 	if (argc == 2) {
 		if (strcmp(argv[1], "-h") == 0) {
 			printHelp();
@@ -40,9 +43,13 @@ sems-c: You must at least provide a phenotype file and snp file.\n\
 		for (int64_t i = 1; i < argc - 2; ++i) {
 			// printf("%s\n", argv[i]);
 			switch(argv[i][1]) {
-				case 'a': // alpha
+				case 'a': // alpha1
 					++i;
-					*alpha = atof(argv[i]);
+					*alpha1 = atof(argv[i]);
+					break;
+				case 'A': // alpha2
+					++i;
+					*alpha2 = atof(argv[i]);
 					break;
 				case 'c': // columns
 					++i;
@@ -68,68 +75,6 @@ sems-c: An invalid option was given to sems-c.\n\
 			}
 		}
 	}
-}
-
-// Prints help text.
-void printHelp() {
-	printf("\n\
-SEMS-C -- Step-Wise Epistatic Model Selection in C\n\
-\n\
-    SEMS-C is a program developed at the National Center for Supercomputing\n\
-    Applications in collaboration with the Center for Computational\n\
-    Biotechnology and Genomic Medicine to map epistatic gene interactions. It\n\
-    uses step-wise linear regression model selection to build a cumulative\n\
-    statistical model of epistatic interactions between SNP's and phenotypes.\n\
-\n\
-Usage: sems-c [OPTION...] [PHENOTYPE_FILE] [SNP_FILE]\n\
-\n\
-Examples:\n\
-\n\
-    sems-c -c p=1:2:3 pheno.txt snp.txt  # Delete columns 1, 2, and 3.\n\
-    sems-c -d c,t pheno.txt snp.txt      # Set delimiter to commas and tabs.\n\
-    sems-c -t p,s pheno.txt snp.txt      # Tranpose data from both files.\n\
-\n\
-Options:\n\
-\n\
-    -c    Delete Columns        Signals SEMS-C to delete certain columns. These\n\
-                                options should be passed in in the form:\n\
-\n\
-                                -c p=#:#:#,s=#:#:#\n\
-\n\
-                                where '#' are the columns to delete and ':'\n\
-                                delimit different column numbers. By default\n\
-                                no columns are deleted.\n\
-\n\
-    -d    File Delimiters       Asserts that the phenotype and snp file are\n\
-                                delimited by the given delimiter. Expects the\n\
-                                form:\n\
-\n\
-                                -d [c/s/t,c/s/t]\n\
-\n\
-                                where 'c' is comma, 's' is space, and 't' is\n\
-                                tab. Allows multiple delimiters. First is for\n\
-                                phenotype and second is SNP. Defaults to comma\n\
-                                delimited.\n\
-\n\
-    -t    Transpose Data        Transpose data from phenotype and/or snp file.\n\
-\n\
-                                -t [p/s,p/s]\n\
-\n\
-\n");
-}
-
-// Print usage text.
-void printUsage() {
-	printf("\n\
-Usage: sems-c [OPTION...] [PHENOTYPE_FILE] [SNP_FILE]\n\
-\n\
-Options:\n\
-    [-c <p=...,s=...>]          # Delete columns.\n\
-    [-d <delimiter,delimiter>]  # File delimiters.\n\
-    [-h]                        # Print help text.\n\
-    [-t <file,file>]            # Tranpose file data.\n\
-    [-u]                        # Print usage information.\n\
-\n");
 }
 
 // Gets user given columsn to ignore.
@@ -275,13 +220,24 @@ void getTranpose(char *arg, int64_t *pTrans, int64_t *sTrans) {
 	}
 }
 
+// Gets and sets user given options.
+// Params:
+// 		pTrans (int64_t *) option to tranpose phenotype file.
+// 		sTrans (int64_t *) option to tranpose snp file.
+// 		pDelim (char *) phenotype file delimiter.
+// 		sDelim (char *) snp file delimiter.
+// 		pCol (int64_t **) phenotype columns to ignore.
+// 		sCol (int64_t **) snp columns to ignore.
+// 		alpha (double *) threshold value.
+// 		outFile (char **) output results file name.
 void printUValues(int64_t pTrans, int64_t sTrans, char pDelim, char sDelim, int64_t *pCol, 
-                  int64_t *sCol, char *phenoFile, char *snpFile, double alpha, 
+                  int64_t *sCol, char *phenoFile, char *snpFile, double alpha1, double alpha2,  
 				  char *outFile) {
 	printf("Tranpose = %lld:%lld\n", pTrans, sTrans);
 	printf("Delimit = %c:%c\n", pDelim, sDelim);
 	printf("Columns = %lld:%lld\n", pCol[0], sCol[0]);
 	printf("iFiles = %s:%s\n", phenoFile, snpFile);
-	printf("Alpha = %f\n", alpha);
+	printf("Alpha1 = %f\n", alpha1);
+	printf("Alpha2 = %f\n", alpha2);
 	printf("oFile = %s\n", outFile);
 }
