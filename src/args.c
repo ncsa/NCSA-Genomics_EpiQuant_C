@@ -21,7 +21,8 @@ void getTranpose(char *arg, int64_t *pTrans, int64_t *sTrans);
 // 		sTrans (int64_t *) option to tranpose snp file.
 // 		pDelim (char *) phenotype file delimiter.
 // 		sDelim (char *) snp file delimiter.
-void getArgs(int64_t argc, char *argv[], int64_t *pTrans, int64_t *sTrans, char *pDelim, char *sDelim, int64_t **pCol, int64_t **sCol) {
+void getArgs(int64_t argc, char *argv[], int64_t *pTrans, int64_t *sTrans, char *pDelim, 
+             char *sDelim, int64_t **pCol, int64_t **sCol, double *alpha, char **outFile) {
 	if (argc == 2) {
 		if (strcmp(argv[1], "-h") == 0) {
 			printHelp();
@@ -36,22 +37,26 @@ sems-c: You must at least provide a phenotype file and snp file.\n\
         Try 'sems-c -h' or 'sems-c -u' for more information.\n");
 		exit(1);
 	} else {
-		int delimSet = 0;
-		int colSet = 0;
 		for (int64_t i = 1; i < argc - 2; ++i) {
 			// printf("%s\n", argv[i]);
 			switch(argv[i][1]) {
-				case 'c':
+				case 'a': // alpha
+					++i;
+					*alpha = atof(argv[i]);
+					break;
+				case 'c': // columns
 					++i;
 					getColumns(argv[i], &pCol, &sCol);
-					colSet = 1;
 					break;
-				case 'd':
+				case 'd': // delimiters
 					++i;
 					getDelimiters(argv[i], pDelim, sDelim);
-					delimSet = 1;
 					break;
-				case 't':
+				case 'o': // output file
+					++i;
+					*outFile = argv[i];
+					break;
+				case 't': // tranpose
 					++i;
 					getTranpose(argv[i], pTrans, sTrans);
 					break;
@@ -61,16 +66,6 @@ sems-c: An invalid option was given to sems-c.\n\
         Try 'sems-c -h' or 'sems-c -u' for more information.\n");
 					exit(1);
 			}
-		}
-		if (!delimSet) {
-			*pDelim = 'c';
-			*sDelim = 'c';
-		}
-		if (!colSet) {
-			*pCol = (int64_t *) malloc(sizeof(int64_t));
-			**pCol = -1;
-			*sCol = (int64_t *) malloc(sizeof(int64_t));
-			**sCol = -1;
 		}
 	}
 }
@@ -143,6 +138,8 @@ Options:\n\
 // 		pCol (int64_t ***) phenotype columns to ignore.
 // 		sCol (int64_t ***) snp columns to ignore.
 void getColumns(char *arg, int64_t ***pCol, int64_t ***sCol) {
+	free(**pCol);
+	free(**sCol);
 	int64_t argSize = 0;
 	int64_t p = 0;
 	int64_t s = 0;
@@ -276,4 +273,15 @@ void getTranpose(char *arg, int64_t *pTrans, int64_t *sTrans) {
 			*pTrans = 1;
 		}
 	}
+}
+
+void printUValues(int64_t pTrans, int64_t sTrans, char pDelim, char sDelim, int64_t *pCol, 
+                  int64_t *sCol, char *phenoFile, char *snpFile, double alpha, 
+				  char *outFile) {
+	printf("Tranpose = %lld:%lld\n", pTrans, sTrans);
+	printf("Delimit = %c:%c\n", pDelim, sDelim);
+	printf("Columns = %lld:%lld\n", pCol[0], sCol[0]);
+	printf("iFiles = %s:%s\n", phenoFile, snpFile);
+	printf("Alpha = %f\n", alpha);
+	printf("oFile = %s\n", outFile);
 }
