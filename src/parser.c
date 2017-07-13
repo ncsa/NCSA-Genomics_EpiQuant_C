@@ -4,13 +4,16 @@
 #include <string.h>
 
 struct Data {
+    int64_t *rows;
+    int64_t *columns;
     char *name;
-    char *(*headers)[];
-    char *(*labels)[];
-    double (*dataPoints)[];
+    char **headers;
+    char **labels;
+    double **dataPoints;
 };
 
-void printFiles(FILE *storage, int64_t rows, int64_t columns, char buff[]);
+void printSnpData(struct Data *snpData, int64_t rows, int64_t columns);
+void printFiles(char *name, int64_t rows, int64_t columns, char buff[]);
 
 // Gets phenotype data from phenotype file.
 // Params:
@@ -45,8 +48,8 @@ void getPhenotype(int64_t pTrans, char pDelim, int64_t *pCol, char *phenoFile) {
         }
     }
     fclose(counter);
-    printf("rows: %lld, columns: %lld\n", rows, columns);
-    // printFiles(storage, rows, columns, buff);
+    // printf("rows: %lld, columns: %lld\n", rows, columns);
+    // printFiles(phenoFile, rows, columns, buff);
 }
 
 // Gets snp data from snp file.
@@ -55,7 +58,7 @@ void getPhenotype(int64_t pTrans, char pDelim, int64_t *pCol, char *phenoFile) {
 //      sDelim (int64_t) snp data delimiter.
 //      sCol (int64_t *) snp data columns to ignore.
 //      snpFile (char *) snp file name.
-void getSNP(int64_t sTrans, char sDelim, int64_t *sCol, char *snpFile) {
+struct Data * getSNP(int64_t sTrans, char sDelim, int64_t *sCol, char *snpFile) {
     FILE *counter, *storage;
     char buff[255];
     char ch;
@@ -72,7 +75,7 @@ void getSNP(int64_t sTrans, char sDelim, int64_t *sCol, char *snpFile) {
     int firstRow = 1;
     int64_t columns = 0;
 
-    // Scan file element by element until EOF is reached.
+    // Scan file by token until EOF is reached.
     while (fscanf(counter, "%s%c", buff, &ch) != EOF) {
         if (firstRow) {
             ++columns;
@@ -83,53 +86,62 @@ void getSNP(int64_t sTrans, char sDelim, int64_t *sCol, char *snpFile) {
         }
     }
     fclose(counter);
-    printf("rows: %lld, columns: %lld\n", rows, columns);
-    // printFiles(storage, rows, columns, buff);
+    // printf("rows: %lld, columns: %lld\n", rows, columns);
+    // printFiles(snpFile, rows, columns, buff);
 
-    struct Data snpData;
-    char *(*headers)[columns - 1];
-    char *(*labels)[rows - 1];
-    double (*dataPoints)[columns - 1] = malloc(sizeof(double) * (rows - 1));
+    // Allocate memory for Data struct.
+    struct Data *snpData = malloc(sizeof(struct Data));
+    snpData->rows = (int64_t *) malloc(sizeof(int64_t));
+    *(snpData->rows) = rows;
+    snpData->columns = (int64_t *) malloc(sizeof(int64_t));
+    *(snpData->columns) = columns;
+    char **headers = malloc(sizeof(char *) * (columns - 1));
+    char **labels = malloc(sizeof(char *) * (rows - 1));
+    double **dataPoints = malloc(sizeof(double *) * (rows - 1));
+    for (int i = 0; i < rows; ++i) {
+        dataPoints[i] = malloc(sizeof(double) * (columns - 1));
+    }
 
+    // Scan file by token and store values.
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < columns; ++j) {
             fscanf(storage, "%s%c", buff, &ch);
+            // printf("%d,%d: %s\n", i, j, buff);
             if (i == 0 && j == 0) {
-                snpData.name = strdup((const char *) buff);
+                snpData->name = strdup((const char *) buff);
             } else if (i == 0) {
-                (*headers)[j - 1] = strdup((const char *) buff);
+                headers[j - 1] = strdup((const char *) buff);
             } else if (j == 0) {
-                (*labels)[i - 1] = strdup((const char *) buff);
+                labels[i - 1] = strdup((const char *) buff);
             } else {
                 dataPoints[i - 1][j - 1] = atof((const char *) buff);
             }
         }
     }
-    snpData.headers = headers;
-    snpData.labels = labels;
-    snpData.dataPoints = dataPoints;
+    // Assign values to snpData.
+    snpData->headers = headers;
+    snpData->labels = labels;
+    snpData->dataPoints = dataPoints;
+    // printSnpData(snpData, rows, columns);
+    return snpData;
+}
 
-    printf("snpData.name = %s\n", snpData.name);
+void printSnpData(struct Data *snpData, int64_t rows, int64_t columns) {
+    printf("snpData->name = %s\n", snpData->name);
+    printf("snpData->rows = %lld\n", *(snpData->rows));
+    printf("snpData->columns = %lld\n", *(snpData->columns));
+    // TODO: Find segmentation fault: 11
     for (int i = 0; i < columns - 1; ++i) {
-        printf("header[%d] = %s\n", i, (*headers)[i]);
+        printf("header[%d] = %s\n", i, snpData->headers[i]);
     }
     for (int i = 0; i < rows - 1; ++i) {
-        printf("labels[%d] = %s\n", i, (*labels)[i]);
+        printf("labels[%d] = %s\n", i, snpData->labels[i]);
     }
     for (int i = 0; i < rows - 1; ++i) {
         for (int j = 0; j < columns - 1; ++j) {
-            printf("dataPoints[%d][%d] = %f\n", i, j, dataPoints[i][j]);
+            printf("dataPoints[%d][%d] = %f\n", i, j, snpData->dataPoints[i][j]);
         }
     }
-
-    free(snpData.name);
-    for (int i = 0; i < columns - 1; ++i) {
-        free(headers[i]);
-    }
-    for (int i = 0; i < rows - 1; ++i) {
-        free(labels[i]);
-    }
-    free(dataPoints);
 }
 
 // Prints data in files.
@@ -138,12 +150,17 @@ void getSNP(int64_t sTrans, char sDelim, int64_t *sCol, char *snpFile) {
 //      rows (int64_t) number of rows to print.
 //      columns (int64_t) number of columns to print.
 //      buff (char []) token storage buffer.
-void printFiles(FILE *storage, int64_t rows, int64_t columns, char buff[]) {
+void printFiles(char *name, int64_t rows, int64_t columns, char buff[]) {
+    FILE *file;
+    if ((file = fopen(name, "r")) == NULL) {
+        printf("File failed to open.\n");
+    }
     for (int64_t i = 0; i < rows; ++i) {
         for (int64_t j = 0; j < columns; ++j) {
-            fscanf(storage, "%s", buff);
+            fscanf(file, "%s", buff);
             printf("%s\t", buff);
         }
         printf("\n");
     }
+    fclose(file);
 }
