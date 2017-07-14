@@ -225,11 +225,13 @@ void getTranpose(char *arg, int64_t *pTrans, int64_t *sTrans) {
 void printUValues(int64_t pTrans, int64_t sTrans, char pDelim, char sDelim, int64_t *pCol, 
                   int64_t *sCol, char *phenoFile, char *snpFile, double alpha1, double alpha2,  
 				  char *outFile) {
-	printf("Tranpose = %lld:%lld\n", pTrans, sTrans);
-	printf("Delimit = %c:%c\n", pDelim, sDelim);
-	printf("Columns = %lld:%lld\n", pCol[0], sCol[0]);
-	printf("iFiles = %s:%s\n", phenoFile, snpFile);
-	printf("Alpha1 = %f\n", alpha1);
-	printf("Alpha2 = %f\n", alpha2);
-	printf("oFile = %s\n", outFile);
+	printf("\n  User Given Arguments:\n\n");
+	printf("\tTranpose = %lld:%lld\n", pTrans, sTrans);
+	printf("\t Delimit = %c:%c\n", pDelim, sDelim);
+	printf("\t Columns = %lld:%lld\n", pCol[0], sCol[0]);
+	printf("\t  iFiles = %s:%s\n", phenoFile, snpFile);
+	printf("\t  Alpha1 = %f\n", alpha1);
+	printf("\t  Alpha2 = %f\n", alpha2);
+	printf("\t   oFile = %s\n", outFile);
+	printf("\n");
 }
