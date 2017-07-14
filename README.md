@@ -9,11 +9,14 @@
 ## Usage
     sems-c [OPTION...] [PHENOTYPE_FILE] [SNP_FILE]
 
-    [-c <p=...,s=...>]          # Delete columns.
-    [-d <delimiter,delimiter>]  # File delimiters.
-    [-h]                        # Print help text.
-    [-t <file,file>]            # Tranpose file data.
-    [-u]                        # Print usage information.
+    [ -a <#> ]                    # Set forward alpha.
+    [ -A <#> ]                    # Set backward alpha.
+    [ -c <p=...,s=...> ]          # Delete columns.
+    [ -d <delimiter,delimiter> ]  # File delimiters.
+    [ -h ]                        # Print help text.
+    [ -o <path/to/file> ]         # Set output file.
+    [ -t <file,file> ]            # Tranpose file data.
+    [ -u ]                        # Print usage information.
 
 ## Examples
 
@@ -22,6 +25,12 @@
     sems-c -t p,s pheno.txt snp.txt      # Tranpose data from both files.
 
 ## Options
+
+    -a    Forward Alpha         Sets alpha threshold for forward step. By
+                                default foward alpha is 0.05.
+
+    -A    Backward Alpha        Sets alpha threshold for backward step. By
+                                default backward alpha is 0.05.
 
     -c    Delete Columns        Signals SEMS-C to delete certain columns. These
                                 options should be passed in in the form:
@@ -42,6 +51,9 @@
                                 tab. Allows multiple delimiters. First is for
                                 phenotype and second is SNP. Defaults to comma
                                 delimited.
+
+    -o    Output File           Sets the output file to write results to. By
+                                default output file is set to sems-c.o.
 
     -t    Transpose Data        Transpose data from phenotype and/or snp file.
 
