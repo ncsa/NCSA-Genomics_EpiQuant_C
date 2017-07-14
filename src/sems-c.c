@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
 	struct Data *snpData = getData(sTrans, sDelim, sCol, snpFile);
 
 	// printData(phenoData);
-	printData(snpData);
+	// printData(snpData);
 	printUValues(pTrans, sTrans, pDelim, sDelim, pCol, sCol, phenoFile, snpFile, alpha1, alpha2, 
 	             outFile);
 
