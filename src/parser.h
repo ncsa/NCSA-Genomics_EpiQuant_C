@@ -10,28 +10,17 @@ struct Data {
     double **dataPoints;
 };
 
-// Gets phenotype data from phenotype file.
+// Gets data from phenotype and snp files.
 // Params:
-//      pTrans (int64_t) tranpose phenotype data.
-//      pDelim (int64_t) phenotype data delimiter.
-//      pCol (int64_t *) phenotype data columns to ignore.
-//      phenoFile (char *) phenotype file name.
-struct Data * getPhenotype(int64_t pTrans, 
-                  char pDelim, 
-                  int64_t *pCol, 
-                  char *phenoFile);
+//      trans (int64_t) tranpose data.
+//      delim (int64_t)  data delimiter.
+//      col (int64_t *)  data columns to ignore.
+//      file (char *)  file name.
+struct Data * getData(int64_t trans, char delim, int64_t *col, char *file);
 
-// Gets snp data from snp file.
+// Prints the data in a Data struct.
 // Params:
-//      sTrans (int64_t) tranpose snp data.
-//      sDelim (int64_t) snp data delimiter.
-//      sCol (int64_t *) snp data columns to ignore.
-//      snpFile (char *) snp file name.
-struct Data * getSNP(int64_t sTrans, 
-            char sDelim, 
-            int64_t *sCol, 
-            char *snpFile);
-
+//      data (struct Data *) struct that contains phenotype or snp data.
 void printData(struct Data *data);
 
 #endif
