@@ -44,7 +44,7 @@ Options:\n\
 \n\
                                 where 'c' is comma, 's' is space, and 't' is\n\
                                 tab. Allows multiple delimiters. First is for\n\
-                                phenotype and second is SNP. Defaults to comma\n\
+                                phenotype and second is SNP. Defaults to tab\n\
                                 delimited.\n\
 \n\
     -o    Output File           Sets the output file to write results to. By\n\

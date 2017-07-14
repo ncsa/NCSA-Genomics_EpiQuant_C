@@ -49,7 +49,7 @@
 
                                 where 'c' is comma, 's' is space, and 't' is
                                 tab. Allows multiple delimiters. First is for
-                                phenotype and second is SNP. Defaults to comma
+                                phenotype and second is SNP. Defaults to tab
                                 delimited.
 
     -o    Output File           Sets the output file to write results to. By
